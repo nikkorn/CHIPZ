@@ -1,5 +1,10 @@
 package Contexts;
 
+/**
+ * Represents a data item.
+ * @author nh163
+ *
+ */
 public class DataItem {
 	private String value = "";
 	private Type type;

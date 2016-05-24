@@ -1,4 +1,4 @@
-import Tokens.Token;
+import token.Token;
 
 public class ChipzLexer {
 	public static String[] KEYWORDS = new String[] {

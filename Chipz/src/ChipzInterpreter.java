@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Stack;
-import Tokens.Token;
+
+import token.Token;
 
 public class ChipzInterpreter {
 	

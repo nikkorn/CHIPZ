@@ -2,8 +2,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
-
-import Tokens.Token;
+import token.Token;
 
 public class Lexer {
 	public static void main(String[] args) {
