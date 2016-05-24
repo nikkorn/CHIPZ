@@ -1,0 +1,5 @@
+define number x
+define number y
+set x = 2 + 3 * ( 4 / 3)
+set y = 6
+print("addition : " add(x, y))
