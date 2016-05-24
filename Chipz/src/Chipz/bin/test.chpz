@@ -1,0 +1,12 @@
+function begin()
+	define number x
+	define number y
+	define number sum
+	set x = 2 + 3 * (4 / 2)
+	set y = 6
+	call add(x, y) into sum
+end
+
+function add(a, b)
+	return a + b
+end
