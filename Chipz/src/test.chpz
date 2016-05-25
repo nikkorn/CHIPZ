@@ -2,9 +2,14 @@ function begin()
 	define number x
 	define number y
 	define number sum
-	set x = 2 + 3 * (4 / 2)
+	set x = 2 + 3 * (cat[100] / 2)
 	set y = 6
 	call add(x, y) into sum
+	if(sum > 5) 
+		loop(sum > 5)
+			set sum = sum - 1
+		end
+	end
 end
 
 function add(a, b)

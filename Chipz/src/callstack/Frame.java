@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Stack;
 import Contexts.Context;
 import Contexts.DataItem;
+import exceptions.MissingFunctionException;
 import function.Function;
 
 /**
@@ -20,6 +21,8 @@ public class Frame {
 	private int frameFunctionTokenIndex;
 	// reference to the call stack, needed for when a function call is made from this frame.
 	private CallStack callStack;
+	// reference to the return value DataItem stored in the frame which called this one.
+	private DataItem returnValueReference;
 	
 	/**
 	 * constructor.
@@ -27,11 +30,13 @@ public class Frame {
 	 * @param args for the function call
 	 * @param reference to the callStack
 	 */
-	public Frame(Function frameFunction, ArrayList<DataItem> args, CallStack callStack) {
+	public Frame(Function frameFunction, ArrayList<DataItem> args, CallStack callStack, DataItem returnValueReference) {
 		// set the fame function.
 		this.frameFunction = frameFunction;
 		// set reference to the call stack.
 		this.callStack = callStack;
+		// set reference to the calling frames DataITem return value.
+		this.returnValueReference = returnValueReference;
 		// push a fresh starting context onto the frameContextStack.
 		pushNewFrameContextOntoStack();
 		// add our function arguments to our initial context.
@@ -70,11 +75,30 @@ public class Frame {
 	}
 	
 	/**
+	 * Called when we are done with this frame.
+	 */
+	private void finish() {
+		callStack.popFrame();
+	}
+	
+	/**
 	 * Called when a function call is made in during processing of this frame.
 	 * @param funtionName
 	 * @param args
 	 */
-	private void invokeFunction(String funtionName, ArrayList<DataItem> args) {
-		callStack.invokeFunction(funtionName, args);
+	private void invokeFunction(String funtionName, ArrayList<DataItem> args, DataItem returnValueReference) {
+		try {
+			callStack.invokeFunction(funtionName, args, returnValueReference);
+		} catch (MissingFunctionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Called by the system. Process the next statement in our function.
+	 */
+	public void processNextStatement() {
+		// TODO Auto-generated method stub
 	}
 }

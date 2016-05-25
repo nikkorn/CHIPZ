@@ -2,16 +2,37 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import astgenerator.ASTGenerator;
+import exceptions.ASTGenerationException;
 import token.Token;
 
 public class Lexer {
 	public static void main(String[] args) {
 		ArrayList<Token> tokenList = new ArrayList<Token>();
+		
+		// Print unprocessed tokens list.
+		System.out.println("------------------------------------------");
 		readFileIntoTokenList(tokenList);
-		Token program = ChipzASTGenerator.generateAST(tokenList);
-		// Print our AST
-		System.out.println("Root Tokens: " + program.getSubTokens().size());
-		prettyPrint(program.getSubTokens(), 0);
+		prettyPrint(tokenList, 0);
+		System.out.println("------------------------------------------");
+		System.out.println();
+		
+		// pass our token list to our new AST generator for shits and giggles.
+		ASTGenerator astg = new ASTGenerator(tokenList);
+		try {
+			astg.generateAST();
+		} catch (ASTGenerationException e) {
+			e.printStackTrace();
+		}
+		
+//		System.out.println("------------------------------------------");
+//		Token program = ChipzASTGenerator.generateAST(tokenList);
+//		// Print our AST
+//		System.out.println("Root Tokens Size: " + program.getSubTokens().size());
+//		System.out.println();
+//		//prettyPrint(program.getSubTokens(), 0);
+//		System.out.println("------------------------------------------");
 	}
 	
 	public static void readFileIntoTokenList(ArrayList<Token> tokenList) {
@@ -21,7 +42,7 @@ public class Lexer {
 			while(input != null) {
 				processLineIntoTokens(input, tokenList);
 				// This is the end on a line, add an EOL token.
-				tokenList.add(new Token(null, Token.Type.EOL, 0));
+				// tokenList.add(new Token(null, Token.Type.EOL, 0));
 				if(sc.hasNextLine()) {
 					input = sc.nextLine();
 				} else {

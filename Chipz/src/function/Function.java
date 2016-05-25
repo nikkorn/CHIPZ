@@ -10,7 +10,7 @@ import token.Token;
  */
 public class Function {
 	// function name
-	private String funtionName = "undefined";
+	private String functionName = "undefined";
 	// tokens wrapped by this function.
 	private ArrayList<Token> tokens;
 	// parameters of this function.
@@ -21,7 +21,7 @@ public class Function {
 	 * @param functionName
 	 */
 	public Function(String functionName) {
-		this.funtionName = functionName;
+		this.functionName = functionName;
 	}
 	
 	/**
@@ -29,7 +29,7 @@ public class Function {
 	 * @return function name
 	 */
 	public String getFuntionName() {
-		return funtionName;
+		return functionName;
 	}
 	
 	/**
@@ -37,7 +37,7 @@ public class Function {
 	 * @param funtionName
 	 */
 	public void setFuntionName(String funtionName) {
-		this.funtionName = funtionName;
+		this.functionName = funtionName;
 	}
 	
 	/**

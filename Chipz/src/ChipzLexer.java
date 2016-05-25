@@ -12,6 +12,7 @@ public class ChipzLexer {
 		"true",
 		"false",
 		"if",
+		"into",
 		"end",
 		"number",
 		"string", 
