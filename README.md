@@ -1,2 +1,0 @@
-# CHIPZ
-Toy programming language
