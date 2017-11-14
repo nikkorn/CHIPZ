@@ -2,8 +2,11 @@ package parse;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import script.Script;
 import statement.Statement;
+import statement.factories.PrintStatementFactory;
+import statement.factories.StatementFactory;
 import token.Token;
 
 /**
@@ -17,6 +20,13 @@ public class Parser {
 	
 	/** Line number to statement mappings. */
 	private HashMap<Integer, Statement> statements = new HashMap<Integer, Statement>();
+	
+	/** The statement factories. */
+	@SuppressWarnings("serial")
+	private static Map<String, StatementFactory> statementFactories = new HashMap<String, StatementFactory>() {{
+		put("print", new PrintStatementFactory());
+		// ... TODO Add other factories ...
+	}};
 	
 	/**
 	 * Process the line tokens to produce a single statement.
@@ -32,15 +42,20 @@ public class Parser {
 		// The index of the next statement to be added.
 		int nextStatementIndex = statements.size();
 		
+		// Get the initial token.
+		Token initial = tokens.get(0);
+		
 		// Switch on the initial line token.
-		switch(tokens.get(0).getType()) {
+		switch(initial.getType()) {
 		
 			case KEYWORD:
+				// Delegate the responsibility of creating statements to our statement factories.
+				statementFactories.get(initial.getText()).create(tokens);
 				break;
 				
 			case LABEL:
 				// Get the label name.
-				String labelName = tokens.get(0).getText();
+				String labelName = initial.getText();
 				// Add the label to the statements list. Pass null as the statement and we don't need one.
 				statements.put(nextStatementIndex, null);
 				// Add the label position.
@@ -49,7 +64,7 @@ public class Parser {
 				
 			default:
 				// Whoops! We got an unexpected token type. Bum out!
-				System.out.println("error: unexpected token type: " + tokens.get(0).getType());
+				System.out.println("error: unexpected token type: " + initial.getType());
 				break;
 		}
 		
@@ -59,6 +74,10 @@ public class Parser {
 		}
 	}
 	
+	/**
+	 * Generate a script object.
+	 * @return
+	 */
 	public Script generateScript() {
 		return null;
 	}

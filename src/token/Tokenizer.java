@@ -141,7 +141,7 @@ public class Tokenizer {
 			for(String keyword : KEYWORDS) {
 				// Check whether we have a keyword match.
 				if(keyword.equals(charSequence.toLowerCase())){
-					return new Token(charSequence, TokenType.KEYWORD, charSequence.length());
+					return new Token(charSequence.toLowerCase(), TokenType.KEYWORD, charSequence.length());
 				} 
 			}
 			// Must be an identifier.
