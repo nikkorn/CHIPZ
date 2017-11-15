@@ -34,18 +34,105 @@ public abstract class StatementFactory {
 	protected abstract Statement create();
 	
 	/**
+	 * Consume the current token if it has the specified type
+	 * @param type
+	 * @return consumed token.
+	 */
+	protected Token consume(TokenType type) {
+		Token current = current();
+		if (current.getType() == type) {
+			consume();
+		} else {
+			throw new Error("Wrong token encountered during parsing. Expected: '" + type + "'");
+		}
+		return current;
+	}
+	
+	/**
 	 * Consume the current token if it has the specified name and type
 	 * @param value
 	 * @param type
+	 * @return consumed token.
 	 */
-	protected void consume(String value, TokenType type) {
+	protected Token consume(String value, TokenType type) {
 		Token current = current();
-		if (current.getText() == value && current.getType() == type) {
+		if (current.getText().equals(value) && current.getType() == type) {
 			consume();
 		} else {
 			throw new Error("Wrong token encountered during parsing. Expected: '" + type + ":" + value + "'");
 		}
+		return current;
 	}
+
+	/**
+	 * Consume tokens up until finding a token of the specified type, returning a list of the consumed tokens.
+	 * @param type
+	 * @return consumed tokens.
+	 */
+	protected ArrayList<Token> consumeUntil(TokenType type) {
+		ArrayList<Token> consumed = new ArrayList<Token>();
+		// While we have tokens to consume...
+		while(hasTokensLeft()) {
+			// ... Get the next token ...
+			Token current = current();
+			// ... If the type of the token matches the type we were supposed to consume up to then ...
+			if (current.getType() == type) {
+				// ... Stop gathering tokens ...
+				break;
+			} else {
+				// ... Otherwise consume the next token and add it to the returning list.
+				consumed.add(consume());
+			}
+		}
+		// Return the list of consumed tokens. 
+		return consumed;
+	}
+	
+	/**
+	 * Consume tokens up until finding a token of the specified type and value, returning a list of the consumed tokens.
+	 * @param value
+	 * @param type
+	 * @return consumed tokens.
+	 */
+	protected ArrayList<Token> consumeUntil(String value, TokenType type) {
+		ArrayList<Token> consumed = new ArrayList<Token>();
+		// While we have tokens to consume...
+		while(hasTokensLeft()) {
+			// ... Get the next token ...
+			Token current = current();
+			// ... If the type of the token matches the type we were supposed to consume up to then ...
+			if (current.getText().equals(value) && current.getType() == type) {
+				// ... Stop gathering tokens ...
+				break;
+			} else {
+				// ... Otherwise consume the next token and add it to the returning list.
+				consumed.add(consume());
+			}
+		}
+		// Return the list of consumed tokens. 
+		return consumed;
+	}
+	
+	/**
+	 * Consume the rest of the tokens, returning a list of the consumed tokens.
+	 * @return consumed tokens.
+	 */
+	protected ArrayList<Token> consumeRest() {
+		ArrayList<Token> consumed = new ArrayList<Token>();
+		// While we have tokens to consume...
+		while(hasTokensLeft()) {
+			// ... Consume the next token and add it to the returning list.
+			consumed.add(consume());
+		}
+		// Return the list of consumed tokens. 
+		return consumed;
+	}
+	
+	/**
+	 * Gets whether there are more tokens to consume.
+	 * @return has tokens left.
+	 */
+	protected boolean hasTokensLeft() { return position <= (tokens.size() - 1); }
 	
 	/**
 	 * Get the current token.

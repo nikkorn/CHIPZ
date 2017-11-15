@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.Map;
 import script.Script;
 import statement.Statement;
+import statement.factories.IfStatementFactory;
+import statement.factories.InputStatementFactory;
+import statement.factories.LetStatementFactory;
 import statement.factories.PrintStatementFactory;
 import statement.factories.StatementFactory;
 import token.Token;
@@ -25,6 +28,9 @@ public class Parser {
 	@SuppressWarnings("serial")
 	private static Map<String, StatementFactory> statementFactories = new HashMap<String, StatementFactory>() {{
 		put("print", new PrintStatementFactory());
+		put("input", new InputStatementFactory());
+		put("let", new LetStatementFactory());
+		put("if", new IfStatementFactory());
 		// ... TODO Add other factories ...
 	}};
 	

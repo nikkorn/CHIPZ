@@ -9,7 +9,7 @@ public enum TokenType {
 	NUMBER, 
 	STRING, 
 	IDENTIFIER, 
-    EQUALS, 
+    ASSIGNMENT, 
     OPERATOR, 
     LEFT_PAREN, 
     RIGHT_PAREN,

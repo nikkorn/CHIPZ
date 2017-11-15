@@ -26,7 +26,7 @@ public class Tokenizer {
             put("(", TokenType.LEFT_PAREN);
             put(")", TokenType.RIGHT_PAREN);
             put(",", TokenType.COMMA);
-            put("=", TokenType.EQUALS);
+            put("=", TokenType.ASSIGNMENT);
         }
     };
     
