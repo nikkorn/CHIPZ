@@ -26,6 +26,6 @@ public class LetStatement implements Statement {
 
 	@Override
 	public void execute() {
-		System.out.println("Assigning: " + expression.evaluate() + " to variable: " + variable);
+		System.out.println("Assigning to variable: " + variable);
 	}
 }

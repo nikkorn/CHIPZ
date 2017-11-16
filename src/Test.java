@@ -38,9 +38,16 @@ public class Test {
 				// Process this line into tokens.
 				ArrayList<Token> lineTokens = Tokenizer.processLine(line);
 				
+				// TODO REMOVE Print the tokens to the console.
+				//for (Token token : lineTokens) {
+					//System.out.println(token.getType() + " : " + token.getText());
+				//}
+				
 				// Get the parser to convert the line tokens into a statement.
 				parser.processLineTokens(lineTokens);
 			}
+			
+			parser.testRun();
 			
 			sc.close();
 		} catch (FileNotFoundException e) {

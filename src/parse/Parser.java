@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import script.Script;
 import statement.Statement;
+import statement.factories.GoToStatementFactory;
 import statement.factories.IfStatementFactory;
 import statement.factories.InputStatementFactory;
 import statement.factories.LetStatementFactory;
@@ -31,6 +32,7 @@ public class Parser {
 		put("input", new InputStatementFactory());
 		put("let", new LetStatementFactory());
 		put("if", new IfStatementFactory());
+		put("goto", new GoToStatementFactory());
 		// ... TODO Add other factories ...
 	}};
 	
@@ -56,7 +58,7 @@ public class Parser {
 		
 			case KEYWORD:
 				// Delegate the responsibility of creating statements to our statement factories.
-				statementFactories.get(initial.getText()).create(tokens);
+				statements.put(nextStatementIndex, statementFactories.get(initial.getText()).create(tokens));
 				break;
 				
 			case LABEL:
@@ -73,11 +75,6 @@ public class Parser {
 				System.out.println("error: unexpected token type: " + initial.getType());
 				break;
 		}
-		
-		// TODO REMOVE Print the tokens to the console.
-		for (Token token : tokens) {
-			System.out.println(token.getType() + " : " + token.getText());
-		}
 	}
 	
 	/**
@@ -86,5 +83,21 @@ public class Parser {
 	 */
 	public Script generateScript() {
 		return null;
+	}
+
+	/**
+	 * TODO REMOVE
+	 */
+	public void testRun() {
+	
+		for (int i = 0; i < statements.size(); i++) {
+			Statement next = statements.get(i);
+			
+			if (next != null) {
+				next.execute();
+			} else {
+				// It is a label placeholder.
+			}
+		}
 	}
 }
