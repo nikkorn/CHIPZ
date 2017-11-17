@@ -1,7 +1,7 @@
 package statement.factories;
 
-import java.util.ArrayList;
 import expression.Expression;
+import parse.ExpressionBuilder;
 import statement.IfStatement;
 import statement.Statement;
 import token.Token;
@@ -19,8 +19,7 @@ public class IfStatementFactory extends StatementFactory {
 		consume();
 		
 		// Consume the tokens which should make up a conditional expression, up until the 'then' keyword.
-		ArrayList<Token> expressionTokens = consumeUntil("then", TokenType.KEYWORD);
-		Expression condition              = null;
+		Expression condition = ExpressionBuilder.build(consumeUntil("then", TokenType.KEYWORD));
 		
 		// Consume our 'then' keyword.
 		consume("then", TokenType.KEYWORD);

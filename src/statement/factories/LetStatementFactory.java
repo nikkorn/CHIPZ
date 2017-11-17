@@ -1,6 +1,7 @@
 package statement.factories;
 
 import expression.Expression;
+import parse.ExpressionBuilder;
 import statement.LetStatement;
 import statement.Statement;
 import token.Token;
@@ -23,8 +24,8 @@ public class LetStatementFactory extends StatementFactory {
 		// Consume the next token which should be an assignment operator. 
 		consume(TokenType.ASSIGNMENT);
 		
-		// TODO Consume the rest of the tokens into an expression.
-		Expression expression = null;
+		// Consume the rest of the tokens into an expression.
+		Expression expression = ExpressionBuilder.build(consumeRest());
 		
 		return new LetStatement(variableToken.getText(), expression);
 	}

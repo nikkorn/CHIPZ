@@ -26,6 +26,10 @@ public class IfStatement implements Statement {
 
 	@Override
 	public void execute() {
-		System.out.println("If condition result != 0 could move to : " + label);
+		if (condition.evaluate().isTruthy()) {
+			System.out.println("Condition evaulted to true! Go to label: " + label);
+		} else {
+			System.out.println("Condition evaulted to false!");
+		}
 	}
 }

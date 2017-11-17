@@ -1,10 +1,9 @@
 package statement.factories;
 
-import java.util.ArrayList;
-
+import expression.Expression;
+import parse.ExpressionBuilder;
 import statement.PrintStatement;
 import statement.Statement;
-import token.Token;
 
 /**
  * Statement factory that produces a PRINT statement.
@@ -17,10 +16,9 @@ public class PrintStatementFactory extends StatementFactory {
 		// Consume our initial token.
 		consume();
 		
-		// Consume the remaining tokens which should make up an expression, the result of which we will be printing.
-		ArrayList<Token> expressionTokens = consumeRest();
+		// Consume the rest of the tokens into an expression, the result of which we will be printed.
+		Expression expression = ExpressionBuilder.build(consumeRest());
 		
-		// TODO Auto-generated method stub
-		return new PrintStatement(null);
+		return new PrintStatement(expression);
 	}
 }

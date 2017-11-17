@@ -19,6 +19,6 @@ public class PrintStatement implements Statement {
 
 	@Override
 	public void execute() {
-		System.out.println("print");
+		System.out.println(expression.evaluate().asString());
 	}
 }
