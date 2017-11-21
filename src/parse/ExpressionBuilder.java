@@ -2,10 +2,10 @@ package parse;
 
 import java.util.ArrayList;
 import java.util.Stack;
-
 import expression.Expression;
 import expression.Operator;
 import expression.Value;
+import expression.Variable;
 import token.Token;
 import token.TokenType;
 
@@ -35,13 +35,72 @@ public class ExpressionBuilder {
 		
 		System.out.println("----------------------------------------");
 		
+		// Convert our post-fix ordered tokens into a single expression and return it.
+		return ExpressionBuilder.convertPostfixTokens(expressionTokens);
+	}
+	
+	/**
+	 * Convert a list of post-fix ordered expression tokens into a single expression.
+	 * @param expressionTokens
+	 * @return expression
+	 */
+	private static Expression convertPostfixTokens(ArrayList<Token> tokens) {
+		
+		Expression current = null;
+		
+		// Handle cases where we only have a single token, this should be either a string, number or variable identifier.
+		if (tokens.size() == 1) {
+			current = ExpressionBuilder.createFromToken(tokens.get(0));
+		} else {
+			// While we have operators in our expression tokens.
+			while (getNextOperatorIndex(tokens) != -1) {
+				
+			}
+		}
+		
 		// TODO Remove Create a fake placeholder expression which returns a value for now.
 		Expression placeholder = new Expression() {
 			@Override
 			public Value evaluate() { return new Value(1); }
 		};
 		
-		return placeholder;
+		//return placeholder;
+		return current;
+	}
+	
+	/**
+	 * Create an atomic expression from a single token.
+	 * @param token
+	 * @return expression
+	 */
+	private static Expression createFromToken(Token token) {
+		// The type of expression we make depends on the token type.
+		switch (token.getType()) {
+			case IDENTIFIER:
+				return new Variable(token.getText());
+			case NUMBER:
+				return new Value(Double.parseDouble(token.getText()));
+			case STRING:
+				return new Value(token.getText());
+			default:
+				throw new Error("error: cannot create expression from '" + token.getType() + "' token");
+		}
+	}
+	
+	/**
+	 * Returns the index of the next operator in the tokens list..
+	 * @param tokens
+	 * @return index
+	 */
+	private static int getNextOperatorIndex(ArrayList<Token> tokens) {
+		int index = 0;
+		for (Token token : tokens) {
+			if (token.getType() == TokenType.OPERATOR) {
+				return index;
+			}
+			index++;
+		}
+		return -1;
 	}
 	
 	/**

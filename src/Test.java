@@ -14,7 +14,7 @@ public class Test {
 	 * @param args
 	 */
 	public static void main (String[] args) {
-		new Test().processFile("src/test.chpz");
+		new Test().processFile("src/simpleprint.chpz");
 	}
 	
 	/**
@@ -37,11 +37,6 @@ public class Test {
 				
 				// Process this line into tokens.
 				ArrayList<Token> lineTokens = Tokenizer.processLine(line);
-				
-				// TODO REMOVE Print the tokens to the console.
-				//for (Token token : lineTokens) {
-					//System.out.println(token.getType() + " : " + token.getText());
-				//}
 				
 				// Get the parser to convert the line tokens into a statement.
 				parser.processLineTokens(lineTokens);
