@@ -1,5 +1,7 @@
 package expression;
 
+import expression.Value.DataType;
+
 /**
  * Represents an operation on two operands using a specified operator.
  */
@@ -36,7 +38,16 @@ public class Operation implements Expression {
 		// Operate on the results.
 		switch(this.operator) {
 			case ADD:
-				break;
+				// Is this an addition or string concatenation? If either value is a string then it is a concatenation.
+				boolean isStringConcatenation = (leftResult.getDataType() == DataType.STRING || rightResult.getDataType() == DataType.STRING);
+				// The type of value we return depends on whether this is a string concatenation.
+				if (isStringConcatenation) {
+					String concatenation = leftResult.asString() + rightResult.asString();
+					return new Value(concatenation);
+				} else {
+					Double result = leftResult.asNumber() + rightResult.asNumber();
+					return new Value(result);
+				}
 			case DIVIDE:
 				break;
 			case EQUALS:

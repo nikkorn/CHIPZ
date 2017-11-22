@@ -3,6 +3,7 @@ package parse;
 import java.util.ArrayList;
 import java.util.Stack;
 import expression.Expression;
+import expression.Operation;
 import expression.Operator;
 import expression.Value;
 import expression.Variable;
@@ -45,27 +46,83 @@ public class ExpressionBuilder {
 	 * @return expression
 	 */
 	private static Expression convertPostfixTokens(ArrayList<Token> tokens) {
-		
-		Expression current = null;
-		
 		// Handle cases where we only have a single token, this should be either a string, number or variable identifier.
 		if (tokens.size() == 1) {
-			current = ExpressionBuilder.createFromToken(tokens.get(0));
-		} else {
-			// While we have operators in our expression tokens.
-			while (getNextOperatorIndex(tokens) != -1) {
+			return ExpressionBuilder.createFromToken(tokens.get(0));
+		} else if (getNextOperatorIndex(tokens) != -1) {
+		
+			Expression current           = null;
+			boolean isLastExpressionLeft = false;
+			
+			while (ExpressionBuilder.getNextOperatorIndex(tokens) != -1) {
 				
+				// Get the index of the next operator.
+				int operatorIndex = getNextOperatorIndex(tokens);
+				
+				// Get the operator token.
+				Token operator = tokens.get(operatorIndex);
+				
+				// If current is null then this is the first expression we are building.
+				if (current == null) {
+					
+					// Get the operand tokens.
+					Token leftOperand  = tokens.get(operatorIndex - 2);
+					Token rightOperand = tokens.get(operatorIndex - 1);
+					
+					// If we have another token after the operator then how the current expression 
+					// is nested within (left or right) the next operation depends on its type. 
+					isLastExpressionLeft = ExpressionBuilder.getTokenType(tokens, operatorIndex + 1) != TokenType.OPERATOR;
+					
+					// Create an operation expression using the operator and operands.
+					current = new Operation(ExpressionBuilder.createFromToken(leftOperand), ExpressionBuilder.createFromToken(rightOperand), Operator.getEnum(operator.getText()));
+					
+					// Remove the operands from the token list.
+					tokens.remove(leftOperand);
+					tokens.remove(rightOperand);
+				} else {
+					
+					// Get the operand token, our other operand is the current expression.
+					Token operand = tokens.get(operatorIndex - 1);
+					
+					// Create a new operation expression where the current expression is one of its operands, the order is important.
+					if (isLastExpressionLeft) {
+						current = new Operation(current, ExpressionBuilder.createFromToken(operand), Operator.getEnum(operator.getText()));
+					} else {
+						current = new Operation(ExpressionBuilder.createFromToken(operand), current, Operator.getEnum(operator.getText()));
+					}
+					
+					// If we have another token after the operator then how the current expression 
+					// is nested within (left or right) the next operation depends on its type. 
+					isLastExpressionLeft = ExpressionBuilder.getTokenType(tokens, operatorIndex + 1) != TokenType.OPERATOR;
+					
+					// Remove the operand from the token list.
+					tokens.remove(operand);
+				}
+				
+				// Remove the operator from the token list.
+				tokens.remove(operator);
 			}
+			
+			// Return the root operation expression.
+			return current;
+		} else {
+			throw new Error("error: missing operator in expression");
 		}
-		
-		// TODO Remove Create a fake placeholder expression which returns a value for now.
-		Expression placeholder = new Expression() {
-			@Override
-			public Value evaluate() { return new Value(1); }
-		};
-		
-		//return placeholder;
-		return current;
+	}
+	
+	/**
+	 * Takes a list of tokens and returns the type of token at the specified index.
+	 * Returns null if there is no item at the index.
+	 * @param tokens
+	 * @param index
+	 * @return token type
+	 */
+	private static TokenType getTokenType(ArrayList<Token> tokens, int index) {
+		if ((index) <= (tokens.size() - 1)) {
+			return tokens.get(index).getType();
+		} else {
+			return null;
+		}
 	}
 	
 	/**
