@@ -49,7 +49,16 @@ public class Operation implements Expression {
 					return new Value(result);
 				}
 			case DIVIDE:
-				break;
+				// We cannot divide non-numeric operands.
+				if (leftResult.getDataType() == DataType.NUMBER && rightResult.getDataType() == DataType.NUMBER) {
+					if (rightResult.asNumber() != 0) {
+						return new Value(leftResult.asNumber() / rightResult.asNumber());
+					} else {
+						throw new Error("error: cannot divide by 0");
+					}
+				} else {
+					throw new Error("error: cannot divide using non-numeric operands");
+				}
 			case EQUALS:
 				break;
 			case GREATER_THAN:
@@ -61,9 +70,19 @@ public class Operation implements Expression {
 			case LESS_THAN_OR_EQUAL:
 				break;
 			case MULTIPLY:
-				break;
+				// We cannot multiply non-numeric operands.
+				if (leftResult.getDataType() == DataType.NUMBER && rightResult.getDataType() == DataType.NUMBER) {
+					return new Value(leftResult.asNumber() * rightResult.asNumber());
+				} else {
+					throw new Error("error: cannot multiply using non-numeric operands");
+				}
 			case SUBTRACT:
-				break;
+				// We cannot subtract non-numeric operands.
+				if (leftResult.getDataType() == DataType.NUMBER && rightResult.getDataType() == DataType.NUMBER) {
+					return new Value(leftResult.asNumber() - rightResult.asNumber());
+				} else {
+					throw new Error("error: cannot subtract using non-numeric operands");
+				}
 			default:
 				break;
 		}
