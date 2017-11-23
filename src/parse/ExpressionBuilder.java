@@ -3,13 +3,15 @@ package parse;
 import java.util.ArrayList;
 import java.util.Stack;
 import expression.Expression;
-import expression.Operation;
 import expression.Operator;
 import expression.Value;
 import expression.Variable;
 import token.Token;
 import token.TokenType;
 
+/**
+ * Builder of expressions from lists of expression tokens.
+ */
 public class ExpressionBuilder {
 	
 	/**
@@ -50,79 +52,47 @@ public class ExpressionBuilder {
 		if (tokens.size() == 1) {
 			return ExpressionBuilder.createFromToken(tokens.get(0));
 		} else if (getNextOperatorIndex(tokens) != -1) {
-		
-			Expression current           = null;
-			boolean isLastExpressionLeft = false;
-			
-			while (ExpressionBuilder.getNextOperatorIndex(tokens) != -1) {
-				
-				// Get the index of the next operator.
-				int operatorIndex = getNextOperatorIndex(tokens);
-				
-				// Get the operator token.
-				Token operator = tokens.get(operatorIndex);
-				
-				// If current is null then this is the first expression we are building.
-				if (current == null) {
-					
-					// Get the operand tokens.
-					Token leftOperand  = tokens.get(operatorIndex - 2);
-					Token rightOperand = tokens.get(operatorIndex - 1);
-					
-					// If we have another token after the operator then how the current expression 
-					// is nested within (left or right) the next operation depends on its type. 
-					isLastExpressionLeft = ExpressionBuilder.getTokenType(tokens, operatorIndex + 1) != TokenType.OPERATOR;
-					
-					// Create an operation expression using the operator and operands.
-					current = new Operation(ExpressionBuilder.createFromToken(leftOperand), ExpressionBuilder.createFromToken(rightOperand), Operator.getEnum(operator.getText()));
-					
-					// Remove the operands from the token list.
-					tokens.remove(leftOperand);
-					tokens.remove(rightOperand);
-				} else {
-					
-					// Get the operand token, our other operand is the current expression.
-					Token operand = tokens.get(operatorIndex - 1);
-					
-					// Create a new operation expression where the current expression is one of its operands, the order is important.
-					if (isLastExpressionLeft) {
-						current = new Operation(current, ExpressionBuilder.createFromToken(operand), Operator.getEnum(operator.getText()));
-					} else {
-						current = new Operation(ExpressionBuilder.createFromToken(operand), current, Operator.getEnum(operator.getText()));
-					}
-					
-					// If we have another token after the operator then how the current expression 
-					// is nested within (left or right) the next operation depends on its type. 
-					isLastExpressionLeft = ExpressionBuilder.getTokenType(tokens, operatorIndex + 1) != TokenType.OPERATOR;
-					
-					// Remove the operand from the token list.
-					tokens.remove(operand);
-				}
-				
-				// Remove the operator from the token list.
-				tokens.remove(operator);
-			}
-			
-			// Return the root operation expression.
-			return current;
+			return ExpressionBuilder.buildNestedExpression(tokens);
 		} else {
 			throw new Error("error: missing operator in expression");
 		}
 	}
 	
 	/**
-	 * Takes a list of tokens and returns the type of token at the specified index.
-	 * Returns null if there is no item at the index.
+	 * Takes a list of operator and operand tokens, builds an expression tree, and returns the root expression.
 	 * @param tokens
-	 * @param index
-	 * @return token type
+	 * @return expression
 	 */
-	private static TokenType getTokenType(ArrayList<Token> tokens, int index) {
-		if ((index) <= (tokens.size() - 1)) {
-			return tokens.get(index).getType();
-		} else {
-			return null;
+	private static Expression buildNestedExpression(ArrayList<Token> tokens) {
+		
+		// Get a stack of the tokens.
+		Stack<Token> stack = new Stack<Token>();
+		for (Token token : tokens) {
+			stack.push(token);
 		}
+		
+		// Get the first token.
+		Token current = stack.pop();
+		
+		// If this token is not not an operator then we have a problem.
+		if (current.getType() != TokenType.OPERATOR) {
+			throw new Error("error: expected token to be operator, got: " + current.getText());
+		}
+		
+		// Create the root node of our expression tree.
+		ExpressionTreeNode root = new ExpressionTreeNode(Operator.getEnum(current.getText()));
+		
+		// Build our tree as long as we have tokens to build it with.
+		while (!stack.isEmpty()) {
+			
+			// Get the next token.
+			current = stack.pop();
+			
+			
+			
+		}
+		
+		return null;
 	}
 	
 	/**
