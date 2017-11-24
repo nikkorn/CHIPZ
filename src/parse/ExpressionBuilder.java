@@ -3,6 +3,7 @@ package parse;
 import java.util.ArrayList;
 import java.util.Stack;
 import expression.Expression;
+import expression.Operation;
 import expression.Operator;
 import expression.Value;
 import expression.Variable;
@@ -21,22 +22,8 @@ public class ExpressionBuilder {
 	 */
 	public static Expression build(ArrayList<Token> expressionTokens) {
 		
-		System.out.println("------ Building Expression From ------- ");
-		
-		for (Token token : expressionTokens) {
-			System.out.println(token.getType() + " : " + token.getText());
-		}
-		
-		// Our tokens will be in infix form, convert them to postfix before building our expressions. 
+		// Our tokens will be in infix form, convert them to post-fix before building our expressions. 
 		expressionTokens = ExpressionBuilder.convertExpressionTokensToPostfix(expressionTokens);
-		
-		System.out.println("-------- Converted to postfix ----------");
-		
-		for (Token token : expressionTokens) {
-			System.out.println(token.getType() + " : " + token.getText());
-		}
-		
-		System.out.println("----------------------------------------");
 		
 		// Convert our post-fix ordered tokens into a single expression and return it.
 		return ExpressionBuilder.convertPostfixTokens(expressionTokens);
@@ -50,49 +37,35 @@ public class ExpressionBuilder {
 	private static Expression convertPostfixTokens(ArrayList<Token> tokens) {
 		// Handle cases where we only have a single token, this should be either a string, number or variable identifier.
 		if (tokens.size() == 1) {
+			
+			// Our single token must represent an atomic expression.
 			return ExpressionBuilder.createFromToken(tokens.get(0));
 		} else if (getNextOperatorIndex(tokens) != -1) {
-			return ExpressionBuilder.buildNestedExpression(tokens);
+			
+			// Create an expression stack.
+			Stack<Expression> stack = new Stack<Expression>();
+			
+			// Process every token in the expression in order.
+			for (Token token : tokens) {
+				
+				// Determine whether this token is an operator or an operand.
+				if (token.getType() == TokenType.OPERATOR) {
+					
+					// This is an operator, meaning that our two top-most expression in the stack are 
+					// operands for an operation. Create an operation and add the operation to the stack.
+					stack.push(new Operation(stack.pop(), stack.pop(), Operator.getEnum(token.getText())));
+				} else {
+					
+					// This is not an operator, It is an operand which represents an atomic expression.
+					stack.push(ExpressionBuilder.createFromToken(token));
+				}
+			}
+			
+			// The top expression in the stack is our root expression.
+			return stack.peek();
 		} else {
 			throw new Error("error: missing operator in expression");
 		}
-	}
-	
-	/**
-	 * Takes a list of operator and operand tokens, builds an expression tree, and returns the root expression.
-	 * @param tokens
-	 * @return expression
-	 */
-	private static Expression buildNestedExpression(ArrayList<Token> tokens) {
-		
-		// Get a stack of the tokens.
-		Stack<Token> stack = new Stack<Token>();
-		for (Token token : tokens) {
-			stack.push(token);
-		}
-		
-		// Get the first token.
-		Token current = stack.pop();
-		
-		// If this token is not not an operator then we have a problem.
-		if (current.getType() != TokenType.OPERATOR) {
-			throw new Error("error: expected token to be operator, got: " + current.getText());
-		}
-		
-		// Create the root node of our expression tree.
-		ExpressionTreeNode root = new ExpressionTreeNode(Operator.getEnum(current.getText()));
-		
-		// Build our tree as long as we have tokens to build it with.
-		while (!stack.isEmpty()) {
-			
-			// Get the next token.
-			current = stack.pop();
-			
-			
-			
-		}
-		
-		return null;
 	}
 	
 	/**
@@ -115,7 +88,7 @@ public class ExpressionBuilder {
 	}
 	
 	/**
-	 * Returns the index of the next operator in the tokens list..
+	 * Returns the index of the next operator in the tokens list.
 	 * @param tokens
 	 * @return index
 	 */

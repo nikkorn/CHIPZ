@@ -15,13 +15,13 @@ public class Operation implements Expression {
 	
 	/**
 	 * Creates a new instance of the Operation class.
-	 * @param left
 	 * @param right
+	 * @param left
 	 * @param operator
 	 */
-	public Operation(Expression left, Expression right, Operator operator) {
-		this.right    = right;
+	public Operation(Expression right, Expression left, Operator operator) {
 		this.left     = left;
+		this.right    = right;
 		this.operator = operator;
 	}
 
@@ -45,7 +45,6 @@ public class Operation implements Expression {
 					String concatenation = leftResult.asString() + rightResult.asString();
 					return new Value(concatenation);
 				} else {
-					System.out.println("add: " + leftResult.asNumber() + " + " + rightResult.asNumber());
 					Double result = leftResult.asNumber() + rightResult.asNumber();
 					return new Value(result);
 				}
@@ -73,7 +72,6 @@ public class Operation implements Expression {
 			case MULTIPLY:
 				// We cannot multiply non-numeric operands.
 				if (leftResult.getDataType() == DataType.NUMBER && rightResult.getDataType() == DataType.NUMBER) {
-					System.out.println("multiply: " + leftResult.asNumber() + " * " + rightResult.asNumber());
 					return new Value(leftResult.asNumber() * rightResult.asNumber());
 				} else {
 					throw new Error("error: cannot multiply using non-numeric operands");

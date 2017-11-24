@@ -8,3 +8,9 @@
 /Test2$Operator.class
 /expression.chpz
 /simpleprint.chpz
+/ExpressionTreeTest.class
+/ExpressionTreeTest$StackNode.class
+/ExpressionTreeTest$TreeNode.class
+/ExpressionTree$StackNode.class
+/ExpressionTree$TreeNode.class
+/ExpressionTree.class
