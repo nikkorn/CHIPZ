@@ -1,5 +1,6 @@
 package statement.factories;
 
+import script.VariableScope;
 import statement.GoToStatement;
 import statement.Statement;
 import token.Token;
@@ -11,7 +12,7 @@ import token.TokenType;
 public class GoToStatementFactory extends StatementFactory {
 
 	@Override
-	public Statement create() {
+	public Statement create(VariableScope variableScope) {
 		
 		// Consume our initial token.
 		consume();

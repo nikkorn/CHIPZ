@@ -7,6 +7,7 @@ import expression.Operation;
 import expression.Operator;
 import expression.Value;
 import expression.Variable;
+import script.VariableScope;
 import token.Token;
 import token.TokenType;
 
@@ -15,18 +16,27 @@ import token.TokenType;
  */
 public class ExpressionBuilder {
 	
+	/** The variable scope being used when creating variable atomic expression. */
+	private VariableScope variableScope;
+	
+	/**
+	 * Create a new instance of the ExpressionBuilder class.
+	 * @param variableScope the variable scope to use when creating variable atomic expression.
+	 */
+	public ExpressionBuilder(VariableScope variableScope) { this.variableScope = variableScope; }
+	
 	/**
 	 * Build an expression using infix ordered (NUMBER,STRING,IDENTIFIER,OPERATOR,LEFT_PAREN,RIGHT_PAREN) tokens.
 	 * @param expressionTokens
 	 * @return expression
 	 */
-	public static Expression build(ArrayList<Token> expressionTokens) {
+	public Expression build(ArrayList<Token> expressionTokens) {
 		
 		// Our tokens will be in infix form, convert them to post-fix before building our expressions. 
 		expressionTokens = ExpressionBuilder.convertExpressionTokensToPostfix(expressionTokens);
 		
 		// Convert our post-fix ordered tokens into a single expression and return it.
-		return ExpressionBuilder.convertPostfixTokens(expressionTokens);
+		return convertPostfixTokens(expressionTokens);
 	}
 	
 	/**
@@ -34,12 +44,12 @@ public class ExpressionBuilder {
 	 * @param expressionTokens
 	 * @return expression
 	 */
-	private static Expression convertPostfixTokens(ArrayList<Token> tokens) {
+	private Expression convertPostfixTokens(ArrayList<Token> tokens) {
 		// Handle cases where we only have a single token, this should be either a string, number or variable identifier.
 		if (tokens.size() == 1) {
 			
 			// Our single token must represent an atomic expression.
-			return ExpressionBuilder.createFromToken(tokens.get(0));
+			return createFromToken(tokens.get(0));
 		} else if (getNextOperatorIndex(tokens) != -1) {
 			
 			// Create an expression stack.
@@ -57,7 +67,7 @@ public class ExpressionBuilder {
 				} else {
 					
 					// This is not an operator, It is an operand which represents an atomic expression.
-					stack.push(ExpressionBuilder.createFromToken(token));
+					stack.push(createFromToken(token));
 				}
 			}
 			
@@ -73,11 +83,11 @@ public class ExpressionBuilder {
 	 * @param token
 	 * @return expression
 	 */
-	private static Expression createFromToken(Token token) {
+	private Expression createFromToken(Token token) {
 		// The type of expression we make depends on the token type.
 		switch (token.getType()) {
 			case IDENTIFIER:
-				return new Variable(token.getText());
+				return new Variable(token.getText(), this.variableScope);
 			case NUMBER:
 				return new Value(Double.parseDouble(token.getText()));
 			case STRING:

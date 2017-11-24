@@ -1,6 +1,7 @@
 package statement.factories;
 
 import java.util.ArrayList;
+import script.VariableScope;
 import statement.Statement;
 import token.Token;
 import token.TokenType;
@@ -19,19 +20,21 @@ public abstract class StatementFactory {
 	/**
 	 * Create a statement based on the tokens provided.
 	 * @param tokens
+	 * @param variable scope
 	 * @return statement
 	 */
-	public Statement create(ArrayList<Token> tokens) {
+	public Statement create(ArrayList<Token> tokens, VariableScope variableScope) {
 		this.position = 0;
 		this.tokens   = tokens;
-		return this.create();
+		return this.create(variableScope);
 	}
 	
 	/**
 	 * Create and return the statement.
+	 * @param variable scope
 	 * @return statement
 	 */
-	protected abstract Statement create();
+	protected abstract Statement create(VariableScope variableScope);
 	
 	/**
 	 * Consume the current token if it has the specified type

@@ -14,7 +14,7 @@ public class Test {
 	 * @param args
 	 */
 	public static void main (String[] args) {
-		new Test().processFile("src/simpleprint.chpz");
+		new Test().processFile("src/expression.chpz");
 	}
 	
 	/**
@@ -49,5 +49,4 @@ public class Test {
 			System.out.println("error: file " + filePath + " not found");
 		}
 	}
-	
 }

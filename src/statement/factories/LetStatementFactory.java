@@ -2,6 +2,7 @@ package statement.factories;
 
 import expression.Expression;
 import parse.ExpressionBuilder;
+import script.VariableScope;
 import statement.LetStatement;
 import statement.Statement;
 import token.Token;
@@ -13,7 +14,7 @@ import token.TokenType;
 public class LetStatementFactory extends StatementFactory {
 
 	@Override
-	public Statement create() {
+	public Statement create(VariableScope variableScope) {
 		
 		// Consume our initial token.
 		consume();
@@ -25,8 +26,8 @@ public class LetStatementFactory extends StatementFactory {
 		consume(TokenType.ASSIGNMENT);
 		
 		// Consume the rest of the tokens into an expression.
-		Expression expression = ExpressionBuilder.build(consumeRest());
+		Expression expression = new ExpressionBuilder(variableScope).build(consumeRest());
 		
-		return new LetStatement(variableToken.getText(), expression);
+		return new LetStatement(variableToken.getText(), expression, variableScope);
 	}
 }

@@ -5,6 +5,7 @@ package expression;
  */
 public class Value implements Expression {
 	
+	/** The possible data types for a value. */
 	public enum DataType { STRING, NUMBER }
 	
 	/** The string value. */

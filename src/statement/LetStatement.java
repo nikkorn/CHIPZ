@@ -1,6 +1,7 @@
 package statement;
 
 import expression.Expression;
+import script.VariableScope;
 
 /**
  * The LET statement.
@@ -14,18 +15,21 @@ public class LetStatement implements Statement {
 	/** The expression. */
 	private Expression expression;
 	
+	/** The target variable scope to assign values to. */
+	private VariableScope variableScope;
+	
 	/**
 	 * Create a new instance of the LetStatement class.
 	 * @param variable
 	 * @param expression
+	 * @param variable scope
 	 */
-	public LetStatement(String variable, Expression expression) { 
-		this.variable   = variable; 
-		this.expression = expression;
+	public LetStatement(String variable, Expression expression, VariableScope variableScope) { 
+		this.variable      = variable; 
+		this.expression    = expression;
+		this.variableScope = variableScope;
 	}
 
 	@Override
-	public void execute() {
-		System.out.println("Assigning to variable: " + variable);
-	}
+	public void execute() { variableScope.set(variable, expression.evaluate()); }
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import script.Script;
+import script.VariableScope;
 import statement.Statement;
 import statement.factories.GoToStatementFactory;
 import statement.factories.IfStatementFactory;
@@ -24,6 +25,9 @@ public class Parser {
 	
 	/** Line number to statement mappings. */
 	private HashMap<Integer, Statement> statements = new HashMap<Integer, Statement>();
+	
+	/** The variable scope. */
+	private VariableScope variableScope = new VariableScope();
 	
 	/** The statement factories. */
 	@SuppressWarnings("serial")
@@ -58,7 +62,7 @@ public class Parser {
 		
 			case KEYWORD:
 				// Delegate the responsibility of creating statements to our statement factories.
-				statements.put(nextStatementIndex, statementFactories.get(initial.getText()).create(tokens));
+				statements.put(nextStatementIndex, statementFactories.get(initial.getText()).create(tokens, variableScope));
 				break;
 				
 			case LABEL:
