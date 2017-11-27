@@ -40,7 +40,7 @@ public class Script {
 	public void executeNextStatement() {
 		// We can only execute the next statement if we actually have one.
 		if (this.hasNextStatement()) {
-			// Execute the next statement.
+			// Get and execute the next statement.
 			this.statements.get(nextStatementIndex++).execute(this);
 		} else {
 			throw new Error("error: next statement not available");

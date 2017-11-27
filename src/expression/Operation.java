@@ -60,15 +60,37 @@ public class Operation implements Expression {
 					throw new Error("error: cannot divide using non-numeric operands");
 				}
 			case EQUALS:
-				break;
+				// This will not be a strict comparison based on type. 1 will equal "1".
+				int result = leftResult.toString().equals(rightResult.toString()) ? 1 : 0;
+				return new Value(result); 
 			case GREATER_THAN:
-				break;
+				// We cannot compare non-numeric values.
+				if (leftResult.getDataType() == DataType.NUMBER && rightResult.getDataType() == DataType.NUMBER) {
+					return new Value(leftResult.asNumber() > rightResult.asNumber() ? 1 : 0);
+				} else {
+					throw new Error("error: cannot apply '>' to non-numeric operands");
+				}
 			case GREATER_THAN_OR_EQUAL:
-				break;
+				// We cannot compare non-numeric values.
+				if (leftResult.getDataType() == DataType.NUMBER && rightResult.getDataType() == DataType.NUMBER) {
+					return new Value(leftResult.asNumber() >= rightResult.asNumber() ? 1 : 0);
+				} else {
+					throw new Error("error: cannot apply '>=' to non-numeric operands");
+				}
 			case LESS_THAN:
-				break;
+				// We cannot compare non-numeric values.
+				if (leftResult.getDataType() == DataType.NUMBER && rightResult.getDataType() == DataType.NUMBER) {
+					return new Value(leftResult.asNumber() < rightResult.asNumber() ? 1 : 0);
+				} else {
+					throw new Error("error: cannot apply '<' to non-numeric operands");
+				}
 			case LESS_THAN_OR_EQUAL:
-				break;
+				// We cannot compare non-numeric values.
+				if (leftResult.getDataType() == DataType.NUMBER && rightResult.getDataType() == DataType.NUMBER) {
+					return new Value(leftResult.asNumber() <= rightResult.asNumber() ? 1 : 0);
+				} else {
+					throw new Error("error: cannot apply '<=' to non-numeric operands");
+				}
 			case MULTIPLY:
 				// We cannot multiply non-numeric operands.
 				if (leftResult.getDataType() == DataType.NUMBER && rightResult.getDataType() == DataType.NUMBER) {

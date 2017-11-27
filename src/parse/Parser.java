@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Scanner;
 import script.Script;
 import script.VariableScope;
+import statement.LabelStatement;
 import statement.Statement;
 import statement.factories.GoToStatementFactory;
 import statement.factories.IfStatementFactory;
@@ -76,10 +77,12 @@ public class Parser {
 				case LABEL:
 					// Get the label name.
 					String labelName = initial.getText();
-					// Add the label to the statements list. Pass null as the statement and we don't need one.
-					statements.add(null);
-					// Add the label position.
-					labelPositions.put(labelName, statements.get(statements.size() - 1));
+					// Create a placeholder statement for the label, this is only used as a bookmark for this label.
+					LabelStatement labelStatement  = new LabelStatement();
+					// Add the label statement to the statements list.
+					statements.add(labelStatement);
+					// Add the label position with a reference to our bookmark label statement.
+					labelPositions.put(labelName, labelStatement);
 					break;
 					
 				default:
