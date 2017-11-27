@@ -1,11 +1,9 @@
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Scanner;
 import parse.Parser;
-import token.Token;
-import token.Tokenizer;
+import script.Script;
 
 public class Test {
 	
@@ -27,22 +25,13 @@ public class Test {
 		try {
 			Scanner sc = new Scanner(new File(filePath));
 			
-			// Create a new parser with which to build a script from the file.
-			Parser parser = new Parser();
+			// Parse our source code input and generate a script object.
+			Script script = Parser.generateScript(sc);
 			
-			while(sc.hasNextLine()) {
-				
-				// Read the next line form the file, this will represent a single statement or label.
-				String line = sc.nextLine();
-				
-				// Process this line into tokens.
-				ArrayList<Token> lineTokens = Tokenizer.processLine(line);
-				
-				// Get the parser to convert the line tokens into a statement.
-				parser.processLineTokens(lineTokens);
+			// Manually execute each script statement individually.
+			while(script.hasNextStatement()) {
+				script.executeNextStatement();
 			}
-			
-			parser.testRun();
 			
 			sc.close();
 		} catch (FileNotFoundException e) {

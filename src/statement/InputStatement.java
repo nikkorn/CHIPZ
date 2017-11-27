@@ -1,5 +1,7 @@
 package statement;
 
+import script.Script;
+
 /**
  * The INPUT statement.
  * Reads input into a variable.
@@ -16,7 +18,7 @@ public class InputStatement implements Statement {
 	public InputStatement(String variable) { this.variable = variable; }
 
 	@Override
-	public void execute() {
+	public void execute(Script executor) {
 		System.out.println("Read input into variable : " + variable);
 	}
 }

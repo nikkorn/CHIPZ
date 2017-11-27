@@ -1,6 +1,7 @@
 package statement;
 
 import expression.Expression;
+import script.Script;
 
 /**
  * The IF statement.
@@ -25,11 +26,11 @@ public class IfStatement implements Statement {
 	}
 
 	@Override
-	public void execute() {
+	public void execute(Script executor) {
+		// Evaluate whether the condition evaluates to 'true'. 
 		if (condition.evaluate().isTruthy()) {
-			System.out.println("Condition evaulted to true! Go to label: " + label);
-		} else {
-			System.out.println("Condition evaulted to false!");
+			// Move processing to the specified label.
+			executor.setNextStatement(this.label);
 		}
 	}
 }

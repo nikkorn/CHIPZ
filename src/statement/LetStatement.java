@@ -1,6 +1,7 @@
 package statement;
 
 import expression.Expression;
+import script.Script;
 import script.VariableScope;
 
 /**
@@ -31,5 +32,5 @@ public class LetStatement implements Statement {
 	}
 
 	@Override
-	public void execute() { variableScope.set(variable, expression.evaluate()); }
+	public void execute(Script executor) { variableScope.set(variable, expression.evaluate()); }
 }

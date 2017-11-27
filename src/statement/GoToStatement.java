@@ -1,5 +1,7 @@
 package statement;
 
+import script.Script;
+
 /**
  * The GOTO statement.
  * Moves processing to a specified label.
@@ -16,7 +18,8 @@ public class GoToStatement implements Statement {
 	public GoToStatement(String label) { this.label = label; }
 
 	@Override
-	public void execute() {
-		System.out.println("Go to label : " + label);
+	public void execute(Script executor) {
+		// Move processing to the specified label.
+		executor.setNextStatement(this.label);
 	}
 }

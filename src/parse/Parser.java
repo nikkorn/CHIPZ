@@ -3,6 +3,7 @@ package parse;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 import script.Script;
 import script.VariableScope;
 import statement.Statement;
@@ -13,21 +14,13 @@ import statement.factories.LetStatementFactory;
 import statement.factories.PrintStatementFactory;
 import statement.factories.StatementFactory;
 import token.Token;
+import token.Tokenizer;
 
 /**
  * The language parser.
  * Converts a list of tokens into a list of program statements in order to generate scripts.
  */
 public class Parser {
-	
-	/** Label to line number mappings for program labels. */
-	private HashMap<String, Integer> labelPositions = new HashMap<String, Integer>();
-	
-	/** Line number to statement mappings. */
-	private HashMap<Integer, Statement> statements = new HashMap<Integer, Statement>();
-	
-	/** The variable scope. */
-	private VariableScope variableScope = new VariableScope();
 	
 	/** The statement factories. */
 	@SuppressWarnings("serial")
@@ -41,67 +34,60 @@ public class Parser {
 	}};
 	
 	/**
-	 * Process the line tokens to produce a single statement.
-	 * @param tokens
+	 * Generate a script object, reading source code from a Scanner instance.
+	 * @param scanner
+	 * @return script
 	 */
-	public void processLineTokens(ArrayList<Token> tokens) {
+	public static Script generateScript(Scanner scanner) {
 		
-		// Do nothing if our token list is empty.
-		if(tokens.isEmpty()) {
-			return;
-		}
+		// Label to statement mappings for program labels.
+		HashMap<String, Statement> labelPositions = new HashMap<String, Statement>();
 		
-		// The index of the next statement to be added.
-		int nextStatementIndex = statements.size();
+		// The list of statements.
+		ArrayList<Statement> statements = new ArrayList<Statement>();
 		
-		// Get the initial token.
-		Token initial = tokens.get(0);
+		// The variable scope.
+		VariableScope variableScope = new VariableScope();
 		
-		// Switch on the initial line token.
-		switch(initial.getType()) {
-		
-			case KEYWORD:
-				// Delegate the responsibility of creating statements to our statement factories.
-				statements.put(nextStatementIndex, statementFactories.get(initial.getText()).create(tokens, variableScope));
-				break;
-				
-			case LABEL:
-				// Get the label name.
-				String labelName = initial.getText();
-				// Add the label to the statements list. Pass null as the statement and we don't need one.
-				statements.put(nextStatementIndex, null);
-				// Add the label position.
-				labelPositions.put(labelName, nextStatementIndex);
-				break;
-				
-			default:
-				// Whoops! We got an unexpected token type. Bum out!
-				System.out.println("error: unexpected token type: " + initial.getType());
-				break;
-		}
-	}
-	
-	/**
-	 * Generate a script object.
-	 * @return
-	 */
-	public Script generateScript() {
-		return null;
-	}
-
-	/**
-	 * TODO REMOVE
-	 */
-	public void testRun() {
-	
-		for (int i = 0; i < statements.size(); i++) {
-			Statement next = statements.get(i);
+		// Process each line from the scanner input.
+		while(scanner.hasNextLine()) {
 			
-			if (next != null) {
-				next.execute();
-			} else {
-				// It is a label placeholder.
+			// Read the next line form the file, this will represent a single statement or label.
+			String line = scanner.nextLine();
+			
+			// Process this line into tokens.
+			ArrayList<Token> lineTokens = Tokenizer.processLine(line);
+			
+			// Do nothing if our token list is empty and move on to the next line.
+			if(lineTokens.isEmpty()) {
+				continue;
+			}
+			
+			// Get the initial token.
+			Token initial = lineTokens.get(0);
+			
+			// Switch on the initial line token.
+			switch(initial.getType()) {
+				case KEYWORD:
+					// Delegate the responsibility of creating statements to our statement factories.
+					statements.add(statementFactories.get(initial.getText()).create(lineTokens, variableScope));
+					break;
+					
+				case LABEL:
+					// Get the label name.
+					String labelName = initial.getText();
+					// Add the label to the statements list. Pass null as the statement and we don't need one.
+					statements.add(null);
+					// Add the label position.
+					labelPositions.put(labelName, statements.get(statements.size() - 1));
+					break;
+					
+				default:
+					// Whoops! We got an unexpected token type. Bum out!
+					throw new Error("error: unexpected token type: " + initial.getType());
 			}
 		}
+		
+		return new Script(statements, labelPositions, variableScope);
 	}
 }

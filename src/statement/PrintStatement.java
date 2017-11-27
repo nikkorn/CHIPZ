@@ -1,6 +1,7 @@
 package statement;
 
 import expression.Expression;
+import script.Script;
 
 /**
  * The PRINT statement.
@@ -18,7 +19,7 @@ public class PrintStatement implements Statement {
 	public PrintStatement(Expression expression) { this.expression = expression; }
 
 	@Override
-	public void execute() {
+	public void execute(Script executor) {
 		System.out.println(expression.evaluate().asString());
 	}
 }
