@@ -13,7 +13,7 @@ public class Test {
 	 * @param args
 	 */
 	public static void main (String[] args) {
-		new Test().processFile("src/test.chpz");
+		new Test().processFile("src/ifelse.chpz");
 	}
 	
 	/**
