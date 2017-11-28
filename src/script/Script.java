@@ -116,4 +116,10 @@ public class Script {
 	 * @return output handler
      */
 	public OutputHandler getOutputHandler() { return this.outputHandler; }
+
+	/**
+	 * Get the variable scope.
+	 * @return variable scope.
+	 */
+	public VariableScope getVariableScope() { return variableScope; }
 }

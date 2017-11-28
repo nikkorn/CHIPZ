@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 public class Tokenizer {
 	
 	/** The language keywords. */
-	public static String[] KEYWORDS = new String[] { "let", "if", "then", "for", "step", "print", "next", "goto", "gosub", "data", "return", "rem", "read", "input", "end" };
+	public static String[] KEYWORDS = new String[] { "let", "if", "then", "else", "print", "next", "goto", "return", "input", "end" };
 	
 	/** Single character mapping to token types. */
 	@SuppressWarnings("serial")

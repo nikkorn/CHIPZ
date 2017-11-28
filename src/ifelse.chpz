@@ -1,0 +1,14 @@
+start:
+	PRINT "Please input a positive or negative number"
+	INPUT num
+	IF num < 0 then negative else positive
+
+negative:
+	PRINT num + " is negative"
+	PRINT ""
+	GOTO start
+	
+positive:
+	PRINT num + " is positive"
+	PRINT ""
+	GOTO start

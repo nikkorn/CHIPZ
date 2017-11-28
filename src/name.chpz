@@ -1,0 +1,5 @@
+PRINT "What is your first name?"
+INPUT fname
+PRINT "What is your second name?"
+INPUT sname
+PRINT "Well, hello " + fname + " 'handsome' " + sname 

@@ -25,9 +25,26 @@ public class IfStatementFactory extends StatementFactory {
 		// Consume our 'then' keyword.
 		consume("then", TokenType.KEYWORD);
 		
-		// Consume the next token which should be an identifier operator, this is actually a label reference. 
-		Token labelReference = consume(TokenType.IDENTIFIER);
+		// Consume the next token which should be an identifier operator. This is actually
+		// a reference to a label to move processing to if the the condition is truthy.
+		Token thenLabelReference = consume(TokenType.IDENTIFIER);
 		
-		return new IfStatement(labelReference.getText(), condition);
+		// IF statements allow an optional 'else'.
+		if (this.hasTokensLeft()) {
+			
+			// Consume our 'else' keyword.
+			consume("else", TokenType.KEYWORD);
+			
+			// Consume the next token which should be an identifier operator. This is actually
+			// a reference to a label to move processing to if the the condition is falsy.
+			Token elseLabelReference = consume(TokenType.IDENTIFIER);
+			
+			// We are creating an IF statement with an the optional 'else'
+			return new IfStatement(thenLabelReference.getText(), elseLabelReference.getText(), condition);
+		} else {
+			
+			// We are creating an IF statement without an the optional 'else'
+			return new IfStatement(thenLabelReference.getText(), null, condition);
+		}
 	}
 }

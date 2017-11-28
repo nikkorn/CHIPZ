@@ -9,19 +9,24 @@ import script.Script;
  */
 public class IfStatement implements Statement {
 	
-	/** The target label. */
-	private String label;
+	/** The target label to move processing to if the condition is truthy. */
+	private String thenLabel;
+	
+	/** The target label to move processing to if the condition is falsy. */
+	private String elseLabel;
 	
 	/** The conditional expression. */
 	private Expression condition;
 	
 	/**
 	 * Create a new instance of the IfStatement class.
-	 * @param label
+	 * @param thenLabel the label to move processing to if the condition is truthy
+	 * @param elseLabel the label to move processing to if the condition is falsy
 	 * @param condition
 	 */
-	public IfStatement(String label, Expression condition) { 
-		this.label     = label; 
+	public IfStatement(String thenLabel, String elseLabel, Expression condition) { 
+		this.thenLabel = thenLabel; 
+		this.elseLabel = elseLabel;
 		this.condition = condition;
 	}
 
@@ -29,8 +34,11 @@ public class IfStatement implements Statement {
 	public void execute(Script executor) {
 		// Evaluate whether the condition evaluates to 'true'. 
 		if (condition.evaluate().isTruthy()) {
-			// Move processing to the specified label.
-			executor.setNextStatement(this.label);
+			// Move processing to the specified then label.
+			executor.setNextStatement(this.thenLabel);
+		} else if (elseLabel != null) {
+			// If an else label has been defined then move processing to this instead.
+			executor.setNextStatement(this.elseLabel);
 		}
 	}
 }
