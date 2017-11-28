@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 import parse.Parser;
+import script.InputProvider;
 import script.Script;
 
 public class Test {
@@ -27,6 +28,15 @@ public class Test {
 			
 			// Parse our source code input and generate a script object.
 			Script script = Parser.generateScript(sc);
+
+			// Set the input provider for the script.
+			script.setInputProvider(new InputProvider() {
+				@Override
+				public String getInput() {
+					// Read input from the console and return it.
+					return new Scanner(System.in).nextLine();
+				}
+			});
 			
 			// Manually execute each script statement individually.
 			while(script.hasNextStatement()) {

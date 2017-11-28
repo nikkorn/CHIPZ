@@ -17,6 +17,12 @@ public class Script {
 	
 	/** The variable scope. */
 	private VariableScope variableScope;
+
+	/** The input provider responsible for providing input when processing an INPUT statement. */
+	private InputProvider inputProvider = null;
+
+	/** The output handler responsible for handling program output. */
+	private OutputHandler outputHandler = null;
 	
 	/** The index of the next statement to execute. */
 	private int nextStatementIndex = 0;
@@ -65,7 +71,7 @@ public class Script {
 	
 	/**
 	 * Set the next statement to be executed by statement index.
-	 * @param statement index
+	 * @param index
 	 */
 	public void setNextStatement(int index) {
 		// Does this statement exist?
@@ -82,9 +88,32 @@ public class Script {
 	 * @return whether there is another statement to execute.
 	 */
 	public boolean hasNextStatement() { return this.nextStatementIndex <= (this.statements.size() - 1); }
-	
+
 	/**
-	 * Reset the script.
-	 */
-	public void reset() { this.nextStatementIndex = 0; }
+	 * Set the input provider.
+	 * The input provider is responsible for providing input when processing an INPUT statement.
+	 * @param inputProvider
+     */
+	public void setInputProvider(InputProvider inputProvider) { this.inputProvider = inputProvider; }
+
+	/**
+	 * Get the input provider.
+	 * The input provider is responsible for providing input when processing an INPUT statement.
+	 * @return input provider
+     */
+	public InputProvider getInputProvider() { return this.inputProvider; }
+
+	/**
+	 * Set the output handler.
+	 * The output handler is responsible for handling program output.
+	 * @param outputHandler
+     */
+	public void setOutputHandler(OutputHandler outputHandler) { this.outputHandler = outputHandler; }
+
+	/**
+	 * Get the output handler.
+	 * The output handler is responsible for handling program output.
+	 * @return output handler
+     */
+	public OutputHandler getOutputHandler() { return this.outputHandler; }
 }

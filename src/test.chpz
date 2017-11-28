@@ -1,7 +1,7 @@
 start:
 	print "This program helps you count sheep!"
 	print "How many sheep would you like to count to?"
-	let count = 10
+	input count
 
 let current = 0
 
@@ -13,5 +13,5 @@ count:
 	
 finish:
 	print "Go again? [y,n]"
-	let response = "n"
+	input response
 	if response == "y" then start

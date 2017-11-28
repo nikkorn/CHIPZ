@@ -61,7 +61,7 @@ public class Operation implements Expression {
 				}
 			case EQUALS:
 				// This will not be a strict comparison based on type. 1 will equal "1".
-				int result = leftResult.toString().equals(rightResult.toString()) ? 1 : 0;
+				int result = leftResult.asString().equals(rightResult.asString()) ? 1 : 0;
 				return new Value(result); 
 			case GREATER_THAN:
 				// We cannot compare non-numeric values.
@@ -109,7 +109,6 @@ public class Operation implements Expression {
 				break;
 		}
 
-		// TODO Auto-generated method stub
 		return null;
 	}
 }

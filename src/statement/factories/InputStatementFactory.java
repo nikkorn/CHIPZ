@@ -20,6 +20,6 @@ public class InputStatementFactory extends StatementFactory {
 		// Consume the next token which should be a variable identifier. 
 		Token variableToken = consume(TokenType.IDENTIFIER);
 		
-		return new InputStatement(variableToken.getText());
+		return new InputStatement(variableToken.getText(), variableScope);
 	}
 }
