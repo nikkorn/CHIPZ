@@ -8,6 +8,7 @@ import script.Script;
 import script.VariableScope;
 import statement.LabelStatement;
 import statement.Statement;
+import statement.factories.EndStatementFactory;
 import statement.factories.GoToStatementFactory;
 import statement.factories.IfStatementFactory;
 import statement.factories.InputStatementFactory;
@@ -31,6 +32,7 @@ public class Parser {
 		put("let", new LetStatementFactory());
 		put("if", new IfStatementFactory());
 		put("goto", new GoToStatementFactory());
+		put("end", new EndStatementFactory());
 		// ... TODO Add other factories ...
 	}};
 	
@@ -50,6 +52,9 @@ public class Parser {
 		// The variable scope.
 		VariableScope variableScope = new VariableScope();
 		
+		// The current line number.
+		int lineNumber = 0;
+		
 		// Process each line from the scanner input.
 		while(scanner.hasNextLine()) {
 			
@@ -61,6 +66,7 @@ public class Parser {
 			
 			// Do nothing if our token list is empty and move on to the next line.
 			if(lineTokens.isEmpty()) {
+				lineNumber++;
 				continue;
 			}
 			
@@ -71,14 +77,18 @@ public class Parser {
 			switch(initial.getType()) {
 				case KEYWORD:
 					// Delegate the responsibility of creating statements to our statement factories.
-					statements.add(statementFactories.get(initial.getText()).create(lineTokens, variableScope));
+					Statement statement = statementFactories.get(initial.getText()).create(lineTokens, variableScope);
+					// Set the statement line number.
+					statement.setLineNumber(lineNumber);
+					// Add the statement to our list of statements
+					statements.add(statement);
 					break;
 					
 				case LABEL:
 					// Get the label name.
 					String labelName = initial.getText();
 					// Create a placeholder statement for the label, this is only used as a bookmark for this label.
-					LabelStatement labelStatement  = new LabelStatement();
+					LabelStatement labelStatement = new LabelStatement();
 					// Add the label statement to the statements list.
 					statements.add(labelStatement);
 					// Add the label position with a reference to our bookmark label statement.
@@ -89,6 +99,9 @@ public class Parser {
 					// Whoops! We got an unexpected token type. Bum out!
 					throw new Error("error: unexpected token type: " + initial.getType());
 			}
+			
+			// Increment the line number
+			lineNumber++;
 		}
 		
 		return new Script(statements, labelPositions, variableScope);

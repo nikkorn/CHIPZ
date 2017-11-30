@@ -1,9 +1,10 @@
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+import expression.Value;
 import parse.Parser;
 import script.InputProvider;
+import script.OutputHandler;
 import script.Script;
 
 public class Test {
@@ -13,7 +14,7 @@ public class Test {
 	 * @param args
 	 */
 	public static void main (String[] args) {
-		new Test().processFile("src/ifelse.chpz");
+		new Test().processFile("src/end.chpz");
 	}
 	
 	/**
@@ -35,6 +36,17 @@ public class Test {
 				public String getInput() {
 					// Read input from the console and return it.
 					return new Scanner(System.in).nextLine();
+				}
+			});
+			
+			// Set the output handler for the script.
+			script.setOutputHandler(new OutputHandler() {
+				@Override
+				public void onPrint(Value value) {}
+
+				@Override
+				public void onEnd() {
+					System.out.println("Ended!");
 				}
 			});
 			

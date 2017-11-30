@@ -1,0 +1,5 @@
+print "We have:"
+print 565656
+print "cakes: " + 35 + " fun times: " + 100 + 12
+print 800 + 800 + 400
+print 2 + (2 * 3) + 3 * 2

@@ -48,6 +48,10 @@ public class Script {
 		if (this.hasNextStatement()) {
 			// Get and execute the next statement.
 			this.statements.get(nextStatementIndex++).execute(this);
+			// If this is the last available statement then call stop.
+			if (!this.hasNextStatement()) {
+				this.stop();
+			}
 		} else {
 			throw new Error("error: next statement not available");
 		}
@@ -122,4 +126,17 @@ public class Script {
 	 * @return variable scope.
 	 */
 	public VariableScope getVariableScope() { return variableScope; }
+	
+	/**
+	 * Stop the currently executing script.
+	 * This is done by moving processing to an unavailable statement.
+	 */
+	public void stop() { 
+		// Move processing to an unavailable statement.
+		this.nextStatementIndex = this.statements.size(); 
+		// If an OutputHandler has been provided then call 'onEnd'.
+		if (this.outputHandler != null) {
+			this.outputHandler.onEnd();
+		}
+	}
 }

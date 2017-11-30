@@ -7,7 +7,7 @@ import script.Script;
  * The IF statement.
  * Moves processing to a specified label if its conditional expression resolves to anything other than 0.
  */
-public class IfStatement implements Statement {
+public class IfStatement extends Statement {
 	
 	/** The target label to move processing to if the condition is truthy. */
 	private String thenLabel;

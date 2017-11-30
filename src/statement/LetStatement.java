@@ -8,7 +8,7 @@ import script.VariableScope;
  * The LET statement.
  * Assigns the result of an expression to a variable.
  */
-public class LetStatement implements Statement {
+public class LetStatement extends Statement {
 	
 	/** The variable name. */
 	private String variable;

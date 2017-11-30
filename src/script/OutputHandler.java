@@ -20,11 +20,4 @@ public interface OutputHandler {
      *     - There being no remaining statements to execute.
      */
     void onEnd();
-    
-    /**
-     * Called in response to the execution of an EXIT statement.
-     * EXIT behaves in the same way as END. However, it also returns an exit code.
-     * @param code the exit code
-     */
-    void onExit(int code);
 }

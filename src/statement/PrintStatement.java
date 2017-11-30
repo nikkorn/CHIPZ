@@ -7,7 +7,7 @@ import script.Script;
  * The PRINT statement.
  * Evaluates an expression and prints the result.
  */
-public class PrintStatement implements Statement {
+public class PrintStatement extends Statement {
 	
 	/** The expression which produces the value to print. */
 	private Expression expression;

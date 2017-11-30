@@ -9,7 +9,7 @@ import script.VariableScope;
  * The INPUT statement.
  * Reads input into a variable.
  */
-public class InputStatement implements Statement {
+public class InputStatement extends Statement {
 	
 	/** The variable name. */
 	private String variable;
