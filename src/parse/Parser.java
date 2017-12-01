@@ -40,8 +40,9 @@ public class Parser {
 	 * Generate a script object, reading source code from a Scanner instance.
 	 * @param scanner
 	 * @return script
+	 * @throws ParserException 
 	 */
-	public static Script generateScript(Scanner scanner) {
+	public static Script generateScript(Scanner scanner) throws ParserException {
 		
 		// Label to statement mappings for program labels.
 		HashMap<String, Statement> labelPositions = new HashMap<String, Statement>();
@@ -53,7 +54,7 @@ public class Parser {
 		VariableScope variableScope = new VariableScope();
 		
 		// The current line number.
-		int lineNumber = 0;
+		int lineNumber = 1;
 		
 		// Process each line from the scanner input.
 		while(scanner.hasNextLine()) {
@@ -61,43 +62,47 @@ public class Parser {
 			// Read the next line form the file, this will represent a single statement or label.
 			String line = scanner.nextLine();
 			
-			// Process this line into tokens.
-			ArrayList<Token> lineTokens = Tokenizer.processLine(line);
-			
-			// Do nothing if our token list is empty and move on to the next line.
-			if(lineTokens.isEmpty()) {
-				lineNumber++;
-				continue;
-			}
-			
-			// Get the initial token.
-			Token initial = lineTokens.get(0);
-			
-			// Switch on the initial line token.
-			switch(initial.getType()) {
-				case KEYWORD:
-					// Delegate the responsibility of creating statements to our statement factories.
-					Statement statement = statementFactories.get(initial.getText()).create(lineTokens, variableScope);
-					// Set the statement line number.
-					statement.setLineNumber(lineNumber);
-					// Add the statement to our list of statements
-					statements.add(statement);
-					break;
-					
-				case LABEL:
-					// Get the label name.
-					String labelName = initial.getText();
-					// Create a placeholder statement for the label, this is only used as a bookmark for this label.
-					LabelStatement labelStatement = new LabelStatement();
-					// Add the label statement to the statements list.
-					statements.add(labelStatement);
-					// Add the label position with a reference to our bookmark label statement.
-					labelPositions.put(labelName, labelStatement);
-					break;
-					
-				default:
-					// Whoops! We got an unexpected token type. Bum out!
-					throw new Error("error: unexpected token type: " + initial.getType());
+			try {
+				// Process this line into tokens.
+				ArrayList<Token> lineTokens = Tokenizer.processLine(line);
+				
+				// Do nothing if our token list is empty and move on to the next line.
+				if(lineTokens.isEmpty()) {
+					lineNumber++;
+					continue;
+				}
+				
+				// Get the initial token.
+				Token initial = lineTokens.get(0);
+				
+				// Switch on the initial line token.
+				switch(initial.getType()) {
+					case KEYWORD:
+						// Delegate the responsibility of creating statements to our statement factories.
+						Statement statement = statementFactories.get(initial.getText()).create(lineTokens, variableScope);
+						// Set the statement line number.
+						statement.setLineNumber(lineNumber);
+						// Add the statement to our list of statements
+						statements.add(statement);
+						break;
+						
+					case LABEL:
+						// Get the label name.
+						String labelName = initial.getText();
+						// Create a placeholder statement for the label, this is only used as a bookmark for this label.
+						LabelStatement labelStatement = new LabelStatement();
+						// Add the label statement to the statements list.
+						statements.add(labelStatement);
+						// Add the label position with a reference to our bookmark label statement.
+						labelPositions.put(labelName, labelStatement);
+						break;
+						
+					default:
+						// Whoops! We got an unexpected token type. Bum out!
+						throw new InvalidStatementException("unexpected token type: " + initial.getType());
+				}
+			} catch (InvalidStatementException | InvalidExpressionException  exception) {
+				throw new ParserException(exception.getMessage() + " l:" + lineNumber);
 			}
 			
 			// Increment the line number

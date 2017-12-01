@@ -11,7 +11,5 @@ public class ParserException extends Exception {
 	 * Create a new instance of the ParserException class.
 	 * @param message
 	 */
-	public ParserException(String message) {
-        super(message);
-    }
+	public ParserException(String message) { super(message); }
 }

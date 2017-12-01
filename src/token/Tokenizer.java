@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import parse.InvalidStatementException;
+
 /**
  * Creates tokens from source code.
  */
@@ -43,9 +45,10 @@ public class Tokenizer {
 	/**
 	 * Process a line into tokens.
 	 * @param line
-	 * @return
+	 * @return list of tokens
+	 * @throws InvalidStatementException 
 	 */
-	public static ArrayList<Token> processLine(String line) {
+	public static ArrayList<Token> processLine(String line) throws InvalidStatementException {
 		
 		// The list of line tokens.
 		ArrayList<Token> tokenList = new ArrayList<Token>();
@@ -75,8 +78,7 @@ public class Tokenizer {
 				currentToken = getToken(line.substring(charsEaten), false);
 			} else {
 				// There are characters left in the line but we can't make a token of them!
-				System.out.println("error: failed to process line, is it valid?");
-				break;
+				throw new InvalidStatementException("failed to process line, is it valid?");
 			}
 		}
 		
@@ -88,8 +90,9 @@ public class Tokenizer {
 	 * @param input
 	 * @param isNewLine Flag defining whether this is the first time this method was called for a new line.
 	 * @return token details
+	 * @throws InvalidStatementException 
 	 */
-	private static Token getToken(String input, boolean isNewLine) {
+	private static Token getToken(String input, boolean isNewLine) throws InvalidStatementException {
 		
 		// Return null if we got empty string
 		if(input.length() == 0) {
@@ -211,6 +214,6 @@ public class Tokenizer {
 		}
 		
 		// Something went wrong.
-		return null;
+		throw new InvalidStatementException("could not parse token from input: " + input);
 	}
 }

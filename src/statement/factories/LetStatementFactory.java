@@ -2,6 +2,8 @@ package statement.factories;
 
 import expression.Expression;
 import parse.ExpressionBuilder;
+import parse.InvalidExpressionException;
+import parse.InvalidStatementException;
 import script.VariableScope;
 import statement.LetStatement;
 import statement.Statement;
@@ -14,7 +16,7 @@ import token.TokenType;
 public class LetStatementFactory extends StatementFactory {
 
 	@Override
-	public Statement create(VariableScope variableScope) {
+	public Statement create(VariableScope variableScope) throws InvalidStatementException, InvalidExpressionException {
 		
 		// Consume our initial token.
 		consume();

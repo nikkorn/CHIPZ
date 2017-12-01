@@ -1,5 +1,6 @@
 package statement.factories;
 
+import parse.InvalidStatementException;
 import script.VariableScope;
 import statement.InputStatement;
 import statement.Statement;
@@ -12,7 +13,7 @@ import token.TokenType;
 public class InputStatementFactory extends StatementFactory {
 
 	@Override
-	public Statement create(VariableScope variableScope) {
+	public Statement create(VariableScope variableScope) throws InvalidStatementException {
 		
 		// Consume our initial token.
 		consume();

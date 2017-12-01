@@ -1,6 +1,8 @@
 package statement.factories;
 
 import java.util.ArrayList;
+import parse.InvalidExpressionException;
+import parse.InvalidStatementException;
 import script.VariableScope;
 import statement.Statement;
 import token.Token;
@@ -22,8 +24,9 @@ public abstract class StatementFactory {
 	 * @param tokens
 	 * @param variable scope
 	 * @return statement
+	 * @throws InvalidStatementException, InvalidExpressionException
 	 */
-	public Statement create(ArrayList<Token> tokens, VariableScope variableScope) {
+	public Statement create(ArrayList<Token> tokens, VariableScope variableScope) throws InvalidStatementException, InvalidExpressionException {
 		this.position = 0;
 		this.tokens   = tokens;
 		return this.create(variableScope);
@@ -33,20 +36,22 @@ public abstract class StatementFactory {
 	 * Create and return the statement.
 	 * @param variable scope
 	 * @return statement
+	 * @throws InvalidStatementException, InvalidExpressionException
 	 */
-	protected abstract Statement create(VariableScope variableScope);
+	protected abstract Statement create(VariableScope variableScope) throws InvalidStatementException, InvalidExpressionException;
 	
 	/**
 	 * Consume the current token if it has the specified type
 	 * @param type
 	 * @return consumed token.
+	 * @throws InvalidStatementException 
 	 */
-	protected Token consume(TokenType type) {
+	protected Token consume(TokenType type) throws InvalidStatementException {
 		Token current = current();
 		if (current.getType() == type) {
 			consume();
 		} else {
-			throw new Error("Wrong token encountered during parsing. Expected: '" + type + "'");
+			throw new InvalidStatementException("Wrong token encountered during parsing. Expected: '" + type + "'");
 		}
 		return current;
 	}
@@ -56,13 +61,14 @@ public abstract class StatementFactory {
 	 * @param value
 	 * @param type
 	 * @return consumed token.
+	 * @throws InvalidStatementException 
 	 */
-	protected Token consume(String value, TokenType type) {
+	protected Token consume(String value, TokenType type) throws InvalidStatementException {
 		Token current = current();
 		if (current.getText().equals(value) && current.getType() == type) {
 			consume();
 		} else {
-			throw new Error("Wrong token encountered during parsing. Expected: '" + type + ":" + value + "'");
+			throw new InvalidStatementException("Wrong token encountered during parsing. Expected: '" + type + ":" + value + "'");
 		}
 		return current;
 	}

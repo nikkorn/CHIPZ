@@ -3,6 +3,7 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 import expression.Value;
 import parse.Parser;
+import parse.ParserException;
 import script.InputProvider;
 import script.OutputHandler;
 import script.Script;
@@ -14,7 +15,7 @@ public class Test {
 	 * @param args
 	 */
 	public static void main (String[] args) {
-		new Test().processFile("src/end.chpz");
+		new Test().processFile("src/test.chpz");
 	}
 	
 	/**
@@ -28,7 +29,12 @@ public class Test {
 			Scanner sc = new Scanner(new File(filePath));
 			
 			// Parse our source code input and generate a script object.
-			Script script = Parser.generateScript(sc);
+			Script script = null;
+			try {
+				script = Parser.generateScript(sc);
+			} catch (ParserException e) {
+				System.out.println(e.getMessage());
+			}
 
 			// Set the input provider for the script.
 			script.setInputProvider(new InputProvider() {

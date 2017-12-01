@@ -3,7 +3,7 @@ package script;
 /**
  * An exception raised during script runtime.
  */
-public class ScriptRuntimeException extends Exception {
+public class ExecutionException extends Exception {
 
 	private static final long serialVersionUID = 1L;
 
@@ -11,7 +11,7 @@ public class ScriptRuntimeException extends Exception {
 	 * Create a new instance of the ScriptRuntimeException class.
 	 * @param message
 	 */
-	public ScriptRuntimeException(String message) {
+	public ExecutionException(String message) {
         super(message);
     }
 }

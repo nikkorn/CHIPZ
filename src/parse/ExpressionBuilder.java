@@ -29,8 +29,9 @@ public class ExpressionBuilder {
 	 * Build an expression using infix ordered (NUMBER,STRING,IDENTIFIER,OPERATOR,LEFT_PAREN,RIGHT_PAREN) tokens.
 	 * @param expressionTokens
 	 * @return expression
+	 * @throws InvalidExpressionException 
 	 */
-	public Expression build(ArrayList<Token> expressionTokens) {
+	public Expression build(ArrayList<Token> expressionTokens) throws InvalidExpressionException {
 		
 		// Our tokens will be in infix form, convert them to post-fix before building our expressions. 
 		expressionTokens = ExpressionBuilder.convertExpressionTokensToPostfix(expressionTokens);
@@ -43,8 +44,9 @@ public class ExpressionBuilder {
 	 * Convert a list of post-fix ordered expression tokens into a single expression.
 	 * @param expressionTokens
 	 * @return expression
+	 * @throws Exception 
 	 */
-	private Expression convertPostfixTokens(ArrayList<Token> tokens) {
+	private Expression convertPostfixTokens(ArrayList<Token> tokens) throws InvalidExpressionException {
 		// Handle cases where we only have a single token, this should be either a string, number or variable identifier.
 		if (tokens.size() == 1) {
 			
@@ -74,7 +76,7 @@ public class ExpressionBuilder {
 			// The top expression in the stack is our root expression.
 			return stack.peek();
 		} else {
-			throw new Error("error: missing operator in expression");
+			throw new InvalidExpressionException("missing operator in expression");
 		}
 	}
 	
@@ -82,8 +84,9 @@ public class ExpressionBuilder {
 	 * Create an atomic expression from a single token.
 	 * @param token
 	 * @return expression
+	 * @throws Exception 
 	 */
-	private Expression createFromToken(Token token) {
+	private Expression createFromToken(Token token) throws InvalidExpressionException {
 		// The type of expression we make depends on the token type.
 		switch (token.getType()) {
 			case IDENTIFIER:
@@ -93,7 +96,7 @@ public class ExpressionBuilder {
 			case STRING:
 				return new Value(token.getText());
 			default:
-				throw new Error("error: cannot create expression from '" + token.getType() + "' token");
+				throw new InvalidExpressionException("cannot create expression from '" + token.getType() + "' token");
 		}
 	}
 	
@@ -117,8 +120,9 @@ public class ExpressionBuilder {
 	 * Takes a infix ordered list of expression tokens and converts them to post-fix.
 	 * @param expressionTokens
 	 * @return post-fix ordered tokens
+	 * @throws Exception 
 	 */
-	private static ArrayList<Token> convertExpressionTokensToPostfix(ArrayList<Token> expressionTokens) {
+	private static ArrayList<Token> convertExpressionTokensToPostfix(ArrayList<Token> expressionTokens) throws InvalidExpressionException {
 		
 		// The output queue.
 		ArrayList<Token> outputQueue = new ArrayList<Token>();
@@ -154,7 +158,7 @@ public class ExpressionBuilder {
 					// Check for opening parenthesis.
 					if (operatorStack.isEmpty()) {
 						// We never found our opening left bracket! We simply cannot go on.
-						System.out.println("error: malformed parenthesis in expression.");
+						throw new InvalidExpressionException("malformed parenthesis in expression.");
 					} else {
 						// Get rid of the opening parenthesis!
 						operatorStack.pop();

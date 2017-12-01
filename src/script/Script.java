@@ -27,6 +27,9 @@ public class Script {
 	/** The index of the next statement to execute. */
 	private int nextStatementIndex = 0;
 	
+	/** The flag defining whether the script has stopped. */
+	private boolean isStopped = false;
+	
 	/**
 	 * Create a new instance of the Script class.
 	 * @param statements
@@ -132,11 +135,15 @@ public class Script {
 	 * This is done by moving processing to an unavailable statement.
 	 */
 	public void stop() { 
-		// Move processing to an unavailable statement.
-		this.nextStatementIndex = this.statements.size(); 
-		// If an OutputHandler has been provided then call 'onEnd'.
-		if (this.outputHandler != null) {
-			this.outputHandler.onEnd();
+		// Do nothing if the script has already stopped.
+		if (!this.isStopped) {
+			// Move processing to an unavailable statement.
+			this.nextStatementIndex = this.statements.size(); 
+			// If we have an output handler then let it know we are done.
+			if (this.outputHandler != null) {
+				this.outputHandler.onEnd();
+			}
+			this.isStopped = true;
 		}
 	}
 }
